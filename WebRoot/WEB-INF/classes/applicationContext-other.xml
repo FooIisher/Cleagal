@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	default-autowire="byType" default-lazy-init="false">
+	<!-- XSS攻击防御配置By SCG  -->
+	<bean id="SpringContextUtil" class="com.ynkj.common.util.SpringContextUtil"></bean>
+	<bean id="xssConfigParam" class="com.ynkj.common.filter.XssConfigParam"></bean>
+	
+	
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">               
+        <!-- 线程池活跃的线程数 -->   
+		<property name="corePoolSize" value="10" /> 
+        <!-- 线程池最大活跃的线程数 -->  
+		<property name="maxPoolSize" value="20" /> 
+        <!-- 队列的最大容量 -->  
+		<property name="queueCapacity" value="25" />
+	</bean>
+	
+	<!-- 短信工具类  -->
+	<bean id="smsUtil" class="com.ynkj.common.util.SmsUtil">
+		<property name="codeContentRegister" value="${code_content_register}" />
+		<property name="codeContentForgetPwd" value="${code_content_forget_pwd}" />
+		<property name="codeContentModifyPhone" value="${code_content_modify_phone}" />
+		<property name="codeContentPushOrder" value="${sms.order.to.pay}" />
+		<property name="codeContentHasPaied" value="${sms.order.has.paied}" />
+		<property name="codeContentToSign" value="${sms.order.to.sign}" />
+		<property name="codeContentHasSign" value="${sms.order.has.signed}" />
+		<property name="codeContentRegSuccess" value="${sms.register.success}" />
+		<property name="codeContentFindPwd" value="${sms.findpassword.sms}" />
+		<property name="codeContentFindPwdSendCode" value="${sms.findpassword.send_code}" />
+		<property name="taskExecutor" ref="taskExecutor" />  
+	</bean>
+	
+</beans>

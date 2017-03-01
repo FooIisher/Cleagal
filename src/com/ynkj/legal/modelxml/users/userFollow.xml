@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="userFollow">
+    <resultMap id="abatorgenerated_UserFollowResult" class="com.ynkj.legal.model.users.UserFollow">
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="user_followed_id" property="userFollowedId"
+			jdbcType="VARCHAR" />
+		<result column="status" property="status"
+			jdbcType="INTEGER" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+	</resultMap>
+	
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.users.UserFollow">
+	    insert into
+		user_follow (user_id,user_followed_id,
+		status,add_time)
+		values (#userId#,#userFollowedId#,0,#addTime#)
+    </insert>
+    
+    <select id="query" resultMap="abatorgenerated_UserFollowResult"
+		parameterClass="com.ynkj.legal.model.users.UserFollow">
+		select *
+		from user_follow
+		where 1=1
+		<isNotEmpty prepend="and" property="userId">
+			user_id =
+			#userId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="userFollowedId">
+			user_followed_id =
+			#userFollowedId#
+		</isNotEmpty>
+	</select>
+	
+	<update id="update" parameterClass="com.ynkj.legal.model.users.UserFollow">
+		update user_follow
+		<dynamic prepend="set">
+			<isNotEmpty prepend="," property="status">
+				status = #status#
+            </isNotEmpty>
+			<isNotEmpty prepend="," property="addTime">
+				add_time = #addTime#
+            </isNotEmpty>
+		</dynamic>
+		where user_id = #userId#
+		and user_followed_id = #userFollowedId#
+	</update>
+    
+</sqlMap>

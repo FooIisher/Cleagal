@@ -1,0 +1,54 @@
+body{
+	text-align: center;
+}
+.login_logo{
+	display: block;margin: 50px auto 20px auto;width: 300px;
+}
+.login_title{
+	margin: auto;display: block;width: 400px;
+}
+.login_content{
+	width: 100%;text-align: center;margin-top: 30px;
+}
+.login_input{
+	width: 240px;font-size: 14px;
+}
+.login_tab{
+	width: 100%;text-align: center;margin:30px auto 0 auto;
+}
+.login_tab .line{
+	border-top:1px solid RGB(206,206,206);padding: 0 120px;font-size: 5px;
+}
+.login_tab .left{
+	margin-right: 50px;
+}
+.login_tab .right{
+	margin-left: 50px;
+}
+.login_tab .dot{
+	padding: 0 40px;
+}
+.login_tab_checked_a{
+	color: #b20000;font-size: 20px
+}
+.login_tab_checked_a:hover{
+	color: #b20000;
+}
+.login_tab_unchecked_a{
+	color: #838383;font-size: 20px
+}
+.login_tab_unchecked_a:hover{
+	color: #b20000;
+}
+.action{
+	width: 240px;margin: auto;height: 25px;
+}
+.action span{
+	float: left;margin-left: 5px;
+}
+.action a{
+	float: right;color: RGB(109,109,109);
+}
+.msg{
+	color: red;text-align: left;width: 240px;margin: auto;height: 20px;
+}

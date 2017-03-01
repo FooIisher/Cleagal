@@ -1,0 +1,24 @@
+.fwzs_recommend_left{
+	display: inline-block;vertical-align: top;width: 80px;text-align: center;cursor: pointer;position: relative;
+}
+.fwzs_recommend_right{
+	display: inline-block;width: 540px;margin-left: 20px;
+}
+.fwzs_recommend_ul li{
+	margin-top: 30px;padding-bottom: 10px;
+}
+.fwzs_recommend_head{
+	width: 80px;height: 80px;
+}
+.fwzs_recommend_user{
+	color: black;font-size: 14px;
+}
+.fwzs_recommend_intro{
+	display: inline-block;width: 400px;margin-top: 10px;
+}
+.fwzs_recommend_chat{
+	display: inline-block;vertical-align: bottom;text-align: right;width: 140px;
+}
+.fwzs_recommend_chat button{
+	margin-right: 0 !important;
+}

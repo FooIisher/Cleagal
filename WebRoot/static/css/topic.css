@@ -1,0 +1,24 @@
+.fwzs_tag_li{
+	padding: 20px 0 10px 0;border-bottom: 1px solid RGB(206,206,206);
+}
+.fwzs_tag_li button:HOVER{
+	color: red;
+}
+.fwzs_tag_active{
+	color: red;
+}
+.fwzs_content_left .am-btn{
+	width: 115px;margin-right: 12px;border-radius:10px;margin-top: 10px;font-size: 14px
+}
+.fwzs_content_left .am-dropdown{
+	padding-bottom: 10px;
+}
+.fwzs_content_left .am-dropdown-content{
+	margin: 0;min-width: 115px;
+}
+.fwzs_content_left .fwzs_last_btn{
+	margin-right: 0px;
+}
+.fwzs_dropdown_active{
+	display: block;
+}

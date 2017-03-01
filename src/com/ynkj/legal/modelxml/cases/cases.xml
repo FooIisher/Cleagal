@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="cases">
+    <resultMap id="casesResult" class="com.ynkj.legal.model.cases.Cases">
+		<result column="case_id" property="caseId"  />
+		<result column="case_content" property="caseContent"/>
+		<result column="case_title" property="caseTitle"/>
+		<result column="img_url" property="imgUrl"/>
+		<result column="follow_count" property="followCount"/>
+		<result column="comment_count" property="commentCount"/>
+		<result column="view_count" property="viewCount"/>
+		<result column="unverified_modify" property="unverifiedModify"/>
+		<result column="verify_status" property="verifyStatus"/>
+		<result column="publish_user" property="publishUser"/>
+		<result column="publish_time" property="publishTime"/>
+		<result column="status" property="status"/>
+		<result column="delete_flag" property="deleteFlag"/>
+		<result column="user_name" property="userName"/>
+		<result column="one_word" property="oneWord"/>
+		<result column="avatar_file" property="avatatFile"/>
+		<result column="followFlag" property="followFlag"/>
+	</resultMap>
+	
+	<select id="simpleSearch" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+     	 SELECT case_id,case_title,comment_count FROM cases 
+     	 WHERE status = 1 AND delete_flag = 0 
+     	 <isNotEmpty prepend="AND" property="keyword">
+			case_title like '%$keyword$%'
+		</isNotEmpty>
+		 ORDER BY comment_count DESC
+	</select>
+	
+	<insert id="insert"  parameterClass="com.ynkj.legal.model.cases.Cases">
+	    insert into
+		cases (case_id,
+		case_title,case_content,img_url,unverified_modify,verify_status,publish_time,publish_user,status)
+		values (#caseId#,#caseTitle#,
+		#caseContent#,#imgUrl#,#unverifiedModify#,#verifyStatus#,#publishTime#,#publishUser#,#status#)
+    </insert>
+    
+    <insert id="insertCasesTopic"  parameterClass="java.util.Map">
+	    insert into
+		case_topic (case_id,
+		topic_id)
+		values (#caseId#,
+		#topicId#)
+    </insert>
+	
+    <select id="listCases" resultMap="casesResult" parameterClass="java.util.Map">
+			 SELECT c.*,u.user_name,u.one_word,u.avatar_file,IF(ufc.user_id IS NULL ,0,1) followFlag FROM cases c 
+				LEFT JOIN users u ON c.publish_user = u.user_id	
+				LEFT JOIN (SELECT user_id,case_id FROM user_follow_case WHERE user_id = #userId# AND status = 0) ufc
+				ON c.case_id = ufc.case_id
+				WHERE c.delete_flag = 0 
+				<isNotEmpty prepend="AND" property="parentId">
+					c.case_id IN(
+						SELECT case_id FROM topic t RIGHT JOIN case_topic ct ON ct.topic_id = t.topic_id 
+						WHERE t.parent_id = #parentId# AND delete_flag = 0
+					) 	
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="topicId">
+					c.case_id IN(
+						SELECT case_id FROM topic t RIGHT JOIN case_topic ct ON ct.topic_id = t.topic_id 
+						WHERE t.topic_id = #topicId# AND delete_flag = 0
+					) 	
+				</isNotEmpty>			
+				AND c.status = 1  
+				<isNotEmpty prepend="AND" property="caseId">
+					c.case_id=#caseId# 
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="publishedUid">
+					c.publish_user = #publishedUid# 
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="keyword">
+					c.case_title like '%$keyword$%' 
+				</isNotEmpty>
+				 <isNotEmpty prepend="AND" property="followFlag">
+					ufc.user_id IS NOT NULL
+				</isNotEmpty>
+				ORDER BY publish_time DESC
+	</select>
+	
+	
+	<update id="updateCaseFollowCount" parameterClass="java.util.Map">
+    	UPDATE cases SET follow_count = (SELECT count(*) FROM user_follow_case 
+			WHERE case_id = #caseId# AND status = 0) WHERE case_id = #caseId#
+    </update>
+    
+    
+    <update id="addViewCount" parameterClass="java.util.Map">
+    	UPDATE cases SET view_count = view_count+1 WHERE case_id = #caseId#
+    </update>
+    
+     
+    
+    <update id="updateCaseCommentCount" parameterClass="java.util.Map">
+    	 UPDATE cases SET comment_count = (SELECT count(*) FROM cases_comments 
+			WHERE case_id = #caseId# and delete_flag = 0 and verify_status = 1) 
+		WHERE case_id = #caseId#
+    </update>
+	
+	
+	
+    
+</sqlMap>

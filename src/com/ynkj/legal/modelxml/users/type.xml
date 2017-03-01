@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="type">
+	<resultMap id="typeResult" class="com.ynkj.legal.model.users.Type">
+		<result column="type_id" property="typeId"  />
+		<result column="type_name" property="typeName"/>
+		<result column="add_time" property="addTime"/>
+		<result column="type_descripe" property="typeDescripe"/>
+		<result column="type_pic" property="typePic"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="is_parent" property="isParent"/>
+		<result column="delete_flag" property="deleteFlag"/>
+		<result column="type_key" property="typeKey"/>
+		<result column="type_value" property="typeValue"/>
+	</resultMap>
+	
+	<sql id="queryWhere">
+		<isNotEmpty prepend="and" property="isParent">
+			is_parent = #isParent#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="parentId">
+			parent_id = #parentId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="typeId">
+			type_id = #typeId#
+		</isNotEmpty>
+	</sql>
+	
+	<select id="queryCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		select count(*) from type where delete_flag = 0
+		<include refid="queryWhere"/>
+	</select>
+	
+	<select id="query" resultMap="typeResult" parameterClass="java.util.Map">
+		select * from type where delete_flag = 0
+		<include refid="queryWhere"/>
+	</select>
+</sqlMap>

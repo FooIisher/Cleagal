@@ -1,0 +1,24 @@
+.am-nav-pills > li + li{
+	margin-left: 0px;
+}
+body{
+	font-size: 12px;color: RGB(109,109,109);
+}
+ul{
+	padding: 0;margin: 0;
+}
+ul.am-dropdown-content{
+	padding: 0;
+}
+a{
+	color: RGB(109,109,109);
+}
+a:HOVER {
+	color:red;
+}
+.am-selected-list{
+	font-size: 12px;
+}
+.am-selected-content{
+	padding: 0
+}

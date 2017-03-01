@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+	default-autowire="byType" default-lazy-init="false">
+
+   	<bean id="defaultMessageConverter" class="org.springframework.jms.support.converter.SimpleMessageConverter"/>
+   	
+    <!-- 配置预警的 Jms模板  -->  
+    <bean id="warn_jmsTemplate" class="org.springframework.jms.core.JmsTemplate">  
+       <property name="connectionFactory" ref="warn_connectionFactory"/>  
+       <property name="defaultDestination" ref="destination"/>  
+       <property name="receiveTimeout" value="10000"/>  
+    </bean>  
+   
+   <!-- 配置预警的connectionFactory   -->
+    <bean id="warn_connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">  
+        <property name="brokerURL" value="${warn_jms.server}" />  
+    </bean>  
+   
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <constructor-arg index="0" value="pay" />  
+    </bean>  
+    
+</beans>

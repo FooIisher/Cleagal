@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" id="WebApp_ID" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+				classpath:applicationContext-*.xml
+			</param-value>
+	</context-param>
+	<!-- Spring 监听器 -->
+	<listener>
+		<listener-class>com.ynkj.common.interceptor.AppRequestListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	<!-- 系统初始化监听器 -->
+	<listener>
+		<description>系统初始化监听器</description>
+		<listener-class>com.ynkj.common.interceptor.InitListener</listener-class>
+	</listener>
+	<!-- 字符编码过滤器 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>*.shtml</url-pattern>
+	</filter-mapping>
+	
+	
+	<!-- 图片验证码配置开始 -->
+	<servlet>
+		<servlet-name>ImageServlet</servlet-name>
+		<servlet-class>com.ynkj.legal.servlet.ImageServlet</servlet-class>
+		<init-param>
+			<param-name>width</param-name>
+			<param-value>65</param-value>
+		</init-param>
+		<init-param>
+			<param-name>height</param-name>
+			<param-value>23</param-value>
+		</init-param>
+		<init-param>
+			<param-name>codeCount</param-name>
+			<param-value>4</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ImageServlet</servlet-name>
+		<url-pattern>/ImageServlet</url-pattern>
+	</servlet-mapping>
+	<!-- 图片验证码配置结束 -->
+
+	<!-- XSS防御过滤器（add by SHI CHANGGEN） -->
+	<filter>
+		<filter-name>xssFilter</filter-name>
+		<filter-class>com.ynkj.common.filter.XssFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>xssFilter</filter-name>
+		<url-pattern>*.shtml</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<!-- Spring MVC Servlet -->
+	<servlet>
+		<servlet-name>Spring-Servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				classpath:applicationContext-*.xml
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Spring-Servlet</servlet-name>
+		<url-pattern>*.shtml</url-pattern>
+	</servlet-mapping>
+
+
+	<jsp-config>
+		<taglib>
+			<taglib-uri>/tags/core</taglib-uri>
+			<taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://www.yiniaokeji.com/functions</taglib-uri>
+			<taglib-location>/WEB-INF/tld/ynkj.tld</taglib-location>
+		</taglib>
+		<taglib>
+      		<taglib-uri>/tags/tytag</taglib-uri>
+      		<taglib-location>/WEB-INF/tld/tyTag.tld</taglib-location>
+    	</taglib>
+	</jsp-config>
+	<session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>homepage/index.shtml</welcome-file>
+	</welcome-file-list>
+</web-app>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd" default-autowire="byType">
+
+	<!-- 共用配置自动代理By SHI CHANGGEN-->
+	
+	<!-- Annotation Config -->	
+	<context:annotation-config/>
+	
+	<!-- 扫描Service -->
+	<context:component-scan base-package="com.ynkj.*.service.impl" />
+
+	<!-- 属性文件读入,
+		读取后properties文件中的属性会被Spring解析成变量的形式,在后面的配置中可以用${...}来引用,参见dataSource的配置
+	-->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:smsConfig.properties</value>
+				<value>classpath:system.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 数据源1：通用数据库连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" lazy-init="false">
+    	<property name="driverClassName" value="${driverClassName}"/>
+        <property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="${maxActive}" />
+		<!-- 连接池最大空闲 -->
+		<!-- <property name="maxIdle" value="${maxIdle}" /> -->
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="10" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}" />
+		<!-- 
+		<property name="poolPreparedStatements" value="true" /> 
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="33" /> 
+		-->
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800秒，也就是30分钟 -->
+		<property name="removeAbandonedTimeout" value="1800" />
+		<!-- 关闭ABANDED连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+		<!-- 开启DRUID的监控统计功能 stat,mergeStat -->
+		<property name="filters" value="mergeStat" /> 
+		<property name="ConnectionInitSqls" value="SELECT 1;SELECT 2" /> 
+    </bean>
+    
+    <!--数据源2 <bean id="dataSourcePuc" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="false">
+        <property name="driverClassName" value="${driverClassName}"/>
+        <property name="url" value="${puc.dburl}"/>
+        <property name="username" value="${puc.username}"/>
+        <property name="password" value="${puc.password}"/>
+        <property name="initialSize" value="${initialSize}"/>
+        <property name="maxActive" value="${maxActive}"/>
+        <property name="maxIdle" value="${maxIdle}"/>
+        <property name="maxWait" value="${maxWait}"/>
+        <property name="validationQuery" value="${validationQuery}"/>
+    </bean> -->
+    
+    <!-- EhCacheManager bean -->
+	<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="shared" value="true" />
+	</bean>
+
+</beans>

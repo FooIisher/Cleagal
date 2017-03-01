@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="topic">
+    <resultMap id="topicResult" class="com.ynkj.legal.model.question.Topic">
+		<result column="topic_id" property="topicId"  />
+		<result column="topic_title" property="topicTitle"/>
+		<result column="add_time" property="addTime"/>
+		<result column="topic_description" property="topicDescription"/>
+		<result column="topic_pic" property="topicPic"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="is_parent" property="isParent"/>
+		<result column="delete_flag" property="deleteFlag"/>
+	</resultMap>
+    
+    <sql id="queryWhere">
+        <isNotEmpty prepend="and" property="isParent">
+			is_parent = #isParent#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="parentId">
+			parent_id = #parentId#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="topicId">
+			topic_id = #topicId#
+		</isNotEmpty>
+    </sql>
+    
+     <select id="queryTopicsByUserId" resultMap="topicResult" parameterClass="java.util.Map">
+		 SELECT * FROM topic t RIGHT JOIN user_topic ut ON t.topic_id = ut.topic_id 
+			WHERE ut.user_id = #userId# AND t.delete_flag = 0 
+	</select>  
+    
+    <select id="queryCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		select count(*) from topic where delete_flag = 0
+		<include refid="queryWhere"/>
+	</select>
+    
+    <select id="query" resultMap="topicResult" parameterClass="java.util.Map">
+		select * from topic where delete_flag = 0
+		<include refid="queryWhere"/>
+	</select>
+    
+    <select id="queryArea" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+		select * from tool_area where 1=1
+		<isNotEmpty prepend="and" property="parentId">
+			parent_id = #parentId#
+		</isNotEmpty>
+		<isEmpty prepend="and" property="parentId">
+			parent_id IS NULL
+		</isEmpty>
+	</select>
+</sqlMap>

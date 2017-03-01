@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="questionInvite">
+    <resultMap id="questionInviteResult" class="com.ynkj.legal.model.question.QuestionInvite">
+		<result column="question_invite_id" property="questionInviteId"  />
+		<result column="question_id" property="questionId" />
+		<result column="sender_uid" property="senderUid" />
+		<result column="recipients_uid" property="recipientsUid"  />
+		<result column="add_time" property="addTime"  />
+		<result column="available_time" property="availableTime"  />
+		<result column="question_title" property="questionTitle"/>
+		<result column="user_name" property="senderUser"/>
+		<result column="follow_count" property="followCount"/>
+		<result column="answer_count" property="answerCount"/>
+	</resultMap>
+	
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.question.QuestionInvite">
+	    insert into
+		question_invite (question_invite_id, question_id,
+		sender_uid,recipients_uid,add_time)
+		values (#questionInviteId#,
+		#questionId#,#senderUid#,#recipientsUid#,#addTime#)
+    </insert>
+    
+    <select id="queryQuestionInvite" resultMap="questionInviteResult" parameterClass="java.util.Map">
+    	SELECT u.user_name,q.question_title,q.follow_count,q.answer_count,qi.* FROM question_invite qi 
+		LEFT JOIN question q on qi.question_id = q.question_id
+		LEFT JOIN users u on qi.sender_uid = u.user_id WHERE qi.recipients_uid = #userId#
+    </select>
+    
+    <select id="getInviteCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+    	SELECT COUNT(*) FROM question_invite WHERE question_id = #questionId# AND sender_uid = #userId# 
+    </select>
+    
+</sqlMap>

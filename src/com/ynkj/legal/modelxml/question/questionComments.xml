@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="questionComments">
+    <resultMap id="questionCommentsResult" class="com.ynkj.legal.model.question.QuestionComments">
+		<result column="user_id" property="commentsId"  />
+		<result column="question_id" property="questionId" />
+		<result column="uid" property="uid" />
+		<result column="reply_uid" property="replyUid"  />
+		<result column="message" property="message"  />
+		<result column="add_time" property="addTime"  />
+		<result column="verify_status" property="verifyStatus"  />
+		<result column="audit_time" property="auditTime"  />
+		<result column="delete_flag" property="deleteFlag"  />
+	</resultMap>
+	
+    <select id="insert"  parameterClass="com.ynkj.legal.model.question.QuestionComments">
+	    insert into
+		user_follow_answer (comments_id, question_id,
+		uid,reply_uid,message,add_time,verify_status)
+		values (#commentsId#,
+		#questionId#,#uid#,#replyUid#,#message#,#addTime#,#verifyStatus#)
+    </select>
+    
+    
+ 
+    
+</sqlMap>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd"           
+	default-autowire="byType" default-lazy-init="false">
+
+	<!-- aop事务管理  -->
+	<aop:aspectj-autoproxy />
+	
+	<!--支持 @Transactional 标记--> 
+	<tx:annotation-driven transaction-manager="ibatisTransactionManager" />
+
+	<aop:config>
+		<!-- 事务从Service层开始,所有以com.ynkj.*.Service.*开头的类都会被匹配到 -->		
+		<aop:advisor			
+			pointcut="execution(* com.ynkj.*.service..*.*(..))" advice-ref="ibatislbsTransaction" />
+	</aop:config>
+
+	<!-- 这些类的写操作需要事务 -->
+	<tx:advice id="ibatislbsTransaction" transaction-manager="ibatisTransactionManager">
+		<tx:attributes>
+			<tx:method name="execute*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="batch*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="update*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="delete*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="insert*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="create*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="save*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="store*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="unlock*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="store*" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="closedOrder" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="issuedProduct" read-only="false" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 定义ehCache的工厂，并设置所使用的Cache name -->    
+    <bean id="ehCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">    
+      <property name="cacheManager" ref="ehCacheManager"/>    
+      <property name="cacheName">    
+          <value>DEFAULT_CACHE</value>    
+      </property>    
+    </bean>   
+
+</beans>

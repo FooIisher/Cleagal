@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="answerComments">
+    <resultMap id="answerCommentsResult" class="com.ynkj.legal.model.answer.AnswerComments">
+		<result column="comments_id" property="commentsId"  />
+		<result column="answer_id" property="answerId" />
+		<result column="uid" property="uid" />
+		<result column="reply_uid" property="replyUid"  />
+		<result column="message" property="message"  />
+		<result column="add_time" property="addTime"  />
+		<result column="verify_status" property="verifyStatus"  />
+		<result column="audit_time" property="auditTime"  />
+		<result column="delete_flag" property="deleteFlag"  />
+		
+		<result column="user_name" property="userName"  />
+		<result column="avatar_file" property="avatarFile"  />
+		<result column="certify_status" property="certifyStatus"  />
+		
+		<result column="answer_content" property="answerContent"  />
+	</resultMap>
+	
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.answer.AnswerComments">
+	    insert into
+		answer_comments (comments_id, answer_id,
+		uid,reply_uid,message,add_time,verify_status)
+		values (#commentsId#,
+		#answerId#,#uid#,#replyUid#,#message#,#addTime#,#verifyStatus#)
+    </insert>
+    
+    <select id="countAnswerComments" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM answer_comments WHERE delete_flag = 0
+    	<isNotEmpty prepend="AND" property="answerId">
+			answer_id=#answerId# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="verifyStatus">
+			verify_status=#verifyStatus# 
+		</isNotEmpty>
+    </select>
+    
+    <select id="queryAnswerComments" parameterClass="java.util.Map" resultMap="answerCommentsResult">
+    	SELECT a.*,b.user_name,b.avatar_file,b.certify_status,c.answer_content
+    	FROM answer_comments a LEFT JOIN users b ON a.uid=b.user_id 
+    	LEFT JOIN answer c ON a.answer_id=c.answer_id
+    	WHERE a.delete_flag = 0
+    	<isNotEmpty prepend="AND" property="userId">
+			v.user_id=#userId# 
+		</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="answerId">
+			a.answer_id=#answerId# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="verifyStatus">
+			a.verify_status=#verifyStatus# 
+		</isNotEmpty>
+    </select>
+    
+</sqlMap>

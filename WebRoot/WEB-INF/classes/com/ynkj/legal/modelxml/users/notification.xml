@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="notification">
+    <resultMap id="notificationResult" class="com.ynkj.legal.model.users.Notification">
+		<result column="notification_id" property="notificationId" />
+		<result column="sender_uid" property="senderUid" />
+		<result column="recipient_uid" property="recipientUid" />
+		<result column="action_type" property="actionType"  />
+		<result column="model_type" property="modelType"  />
+		<result column="source_id" property="sourceId"  />
+		<result column="add_time" property="addTime"  />
+		<result column="read_flag" property="readFlag"  />
+		<result column="notify_content" property="notifyContent"  />
+		<result column="user_name" property="userName"  />
+		
+	</resultMap>
+	
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.users.Notification">
+	    insert into
+		notification (notification_id,sender_uid,
+		recipient_uid,action_type,model_type,source_id,add_time,read_flag)
+		values (#notificationId#,#senderUid#,#recipientUid#,#actionType#,#modelType#,#sourceId#,#addTime#,#readFlag#)
+    </insert>
+    
+     <select  id="getUserNotification" resultMap="notificationResult" parameterClass="java.util.Map">
+     	SELECT u.user_name,alll.* FROM (
+			  SELECT u.user_name notify_content,n.* FROM notification n LEFT JOIN users u on n.source_id = u.user_id 
+				where n.model_type = 4 and n.recipient_uid = #userId#
+			  union all
+			  SELECT c.case_content notify_content,n.* FROM notification n LEFT JOIN cases c on n.source_id= c.case_id 
+			  where n.model_type = 3 and n.recipient_uid = #userId#
+			  union all
+			  SELECT aq.question_title notify_content,n.* FROM notification n LEFT JOIN answer a on n.source_id = a.answer_id 
+			  LEFT JOIN question aq ON a.question_id = aq.question_id
+			  WHERE n.model_type = 2 AND n.recipient_uid = #userId#
+			  union all
+			  SELECT q.question_title notify_content,n.* FROM notification n LEFT JOIN question q on n.source_id = q.question_id 
+              where n.model_type = 1 and n.recipient_uid = #userId#
+              union all
+			  SELECT qq.question_title notify_content,n.* FROM notification n LEFT JOIN question qq on n.source_id = qq.question_id 
+              where n.model_type = 5 and n.recipient_uid = #userId#
+			  order by add_time DESC) alll LEFT JOIN users u ON alll.sender_uid = u.user_id 
+	</select>
+	
+	 <select id="queryCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		select count(*) from notification where read_flag = 0 and recipient_uid = #userId#
+	</select>
+	
+	<update id="updateReadedFlagTo1"  parameterClass="java.util.Map">
+		UPDATE notification SET read_flag =  1 WHERE recipient_uid = #userId# 
+	</update>
+	
+</sqlMap>

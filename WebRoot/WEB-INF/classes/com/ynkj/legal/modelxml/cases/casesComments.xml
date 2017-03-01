@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="casesComments">
+    <resultMap id="casesCommentsResult" class="com.ynkj.legal.model.cases.CasesComments">
+		<result column="comments_id" property="commentsId"  />
+		<result column="case_id" property="caseId" />
+		<result column="uid" property="uid" />
+		<result column="reply_uid" property="replyUid"  />
+		<result column="message" property="message"  />
+		<result column="add_time" property="addTime"  />
+		<result column="verify_status" property="verifyStatus"  />
+		<result column="audit_time" property="auditTime"  />
+		<result column="delete_flag" property="deleteFlag"  />
+		<result column="userName" property="userName"  />
+		<result column="replyUserName" property="replyUserName"  />
+		<result column="avatarFile" property="avatarFile"  />
+		
+	</resultMap>
+	
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.cases.CasesComments">
+	    insert into
+		cases_comments (comments_id, case_id,
+		uid,reply_uid,message,add_time,verify_status)
+		values (#commentsId#,
+		#caseId#,#uid#,#replyUid#,#message#,#addTime#,#verifyStatus#)
+    </insert>
+    
+    
+    <select id="listCasesComments" resultMap="casesCommentsResult" parameterClass="java.util.Map">
+			 SELECT cc.*,u.user_name userName, u.avatar_file avatarFile,ru.user_name replyUserName FROM cases_comments cc 
+				LEFT JOIN users u on cc.uid = u.user_id 
+				LEFT JOIN users ru on cc.uid = ru.user_id WHERE cc.verify_status = 1 AND cc.delete_Flag = 0
+			<isNotEmpty prepend="AND" property="caseId">
+				cc.case_id=#caseId# 
+			</isNotEmpty>	
+			ORDER BY cc.add_time 
+	</select>
+ 
+ 
+    
+</sqlMap>

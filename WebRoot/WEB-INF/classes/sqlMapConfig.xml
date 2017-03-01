@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig
+	PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+		"http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+              lazyLoadingEnabled="true" errorTracingEnabled="true" maxRequests="32"
+              maxSessions="10" maxTransactions="5" useStatementNamespaces="true"/>
+	
+	<sqlMap resource="com/ynkj/legal/modelxml/users/users.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/users/userFollow.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/users/notification.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/users/userActionHistory.xml" />
+	
+	<sqlMap resource="com/ynkj/legal/modelxml/users/type.xml" />
+	
+	<sqlMap resource="com/ynkj/legal/modelxml/answer/userFollowAnswer.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/answer/answer.xml" /> 
+	<sqlMap resource="com/ynkj/legal/modelxml/answer/answerComments.xml" /> 
+	<sqlMap resource="com/ynkj/legal/modelxml/answer/userPraiseAnswer.xml" /> 
+	
+	<sqlMap resource="com/ynkj/legal/modelxml/question/topic.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/question/userFollowQuestion.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/question/questions.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/question/questionComments.xml" />
+	<sqlMap resource="com/ynkj/legal/modelxml/question/questionInvite.xml" />
+	
+	
+	<sqlMap resource="com/ynkj/legal/modelxml/cases/userFollowCases.xml" /> 
+	<sqlMap resource="com/ynkj/legal/modelxml/cases/casesComments.xml" /> 
+	<sqlMap resource="com/ynkj/legal/modelxml/cases/cases.xml" /> 
+	
+	
+	<sqlMap resource="com/ynkj/legal/modelxml/comm/job.xml" /> 
+	
+	
+     
+</sqlMapConfig>

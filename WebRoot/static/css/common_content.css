@@ -1,0 +1,35 @@
+.fwzs_content{
+	width: 1000px;margin: auto;
+}
+.fwzs_content_left{
+	width: 640px;display: inline-block;vertical-align: top;
+}
+.fwzs_content_right{
+	width: 300px;display: inline-block;margin-left: 60px;
+}
+.fwzs_content_left li{
+	list-style: none;border-bottom: 1px solid RGB(206,206,206);
+}
+
+label.error {
+	background: url("../images/unchecked.gif") no-repeat 0px 0px;
+	padding-left: 16px;
+	padding-bottom: 2px;
+	color: #EA5200;
+	font-size: 14px;
+	margin-left:10px;
+	background-position: center left;
+}
+
+label.checked {
+	background: url("../images/checked.gif") no-repeat 0px 0px;
+	background-position: center left;
+	width:10% !important
+}
+
+.fwzs_icon_vv{
+	width: 20px !important;height: 20px !important;position:absolute;right: 2px;bottom: 2px;
+}
+.fwzs_icon_v{
+	width: 10px !important;height: 10px !important;
+}

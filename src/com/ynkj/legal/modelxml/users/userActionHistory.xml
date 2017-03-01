@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="userActionHistory">
+    <resultMap id="userActionHistoryResult" class="com.ynkj.legal.model.users.UserActionHistory">
+		<result column="history_id" property="historyId" />
+		<result column="uid" property="uid" />
+		<result column="associate_type" property="associateType" />
+		<result column="associate_id" property="associateId"  />
+		<result column="associate_action" property="associateAction"  />
+		<result column="add_time" property="addTime"  />
+		<result column="anonymous" property="anonymous"  />
+ 
+		
+	</resultMap>
+	
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.users.UserActionHistory">
+	    insert into
+		user_action_history (history_id,uid,
+		associate_type,associate_action,associate_id,add_time,anonymous)
+		values (#historyId#,#uid#,#associateType#,#associateAction#,#associateId#,#addTime#,#anonymous#)
+    </insert>
+    
+	
+</sqlMap>

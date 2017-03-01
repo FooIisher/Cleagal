@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="question">
+    <resultMap id="questionResult" class="com.ynkj.legal.model.question.Question">
+		<result column="question_id" property="questionId"  />
+		<result column="question_title" property="questionTitle"/>
+		<result column="question_content" property="questionContent"/>
+		<result column="add_time" property="addTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="published_uid" property="publishedUid"/>
+		<result column="answer_count" property="answerCount"/>
+		<result column="comment_count" property="commentCount"/>
+		<result column="follow_count" property="followCount"/>
+		<result column="view_count" property="viewCount"/>
+		<result column="verify_status" property="verifyStatus"/>
+		<result column="lock_flag" property="lockFlag"/>
+		<result column="anonymous" property="anonymous"/>
+		<result column="status" property="status"/>
+		<result column="delete_flag" property="deleteFlag"/>
+		<result column="followFlag" property="followFlag"/>
+		<result column="unverified_modify" property="unverifiedModify"/>
+		
+		
+		<result column="answer_id" property="answerId"/>
+		<result column="answer_content" property="answerContent"/>
+		<result column="agree_count" property="agreeCount"/>
+		<result column="praiseFlag" property="praiseFlag"/>
+		<result column="user_name" property="userName"/>
+		<result column="one_word" property="oneWord"/>
+		<result column="avatar_file" property="avatarFile"/>
+		<result column="auser_name" property="auserName"/>
+		<result column="aone_word" property="aoneWord"/>
+		<result column="aavatar_file" property="aavatarFile"/>
+		<result column="aanonymous" property="aanonymous"/>
+		<result column="acommentCount" property="acommentCount"/>
+		<result column="aviewCount" property="aviewCount"/>
+		<result column="acertifyStatus" property="acertifyStatus"/>
+		
+		<result column="afollowFlag" property="afollowFlag"/>
+		<result column="topic_id" property="topicId"/>
+		<result column="topic_title" property="topicTitle"/>
+		<result column="topic_pic" property="topicPic"/>
+		
+	</resultMap>
+    
+    
+     <select id="simpleSearch" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+     	 SELECT question_id,question_title,answer_count FROM question 
+     	 WHERE status = 1 AND delete_flag = 0 
+     	 <isNotEmpty prepend="AND" property="keyword">
+			question_title like '%$keyword$%'
+		</isNotEmpty>
+		 ORDER BY answer_count DESC
+	</select>
+ 	
+ 	<select id="countFollowQuestion" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+ 		SELECT COUNT(*) FROM user_follow_question WHERE user_id = #followUserId# AND status = 0
+ 	</select>
+ 
+ 	<select id="countQuestion" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+     	SELECT count(*) FROM 
+		(SELECT q.*,u.user_name,u.one_word,IF(uf.user_id IS NULL ,0,1)followFlag ,a.answer_content,a.answer_id,a.agree_count,IF(upa.user_id IS NULL ,0,1) praiseFlag 
+					FROM question q 
+		LEFT JOIN users u on q.published_uid = u.user_id			
+		LEFT JOIN 
+		 			answer a on q.question_id = a.question_id AND a.status = 1 AND a.delete_flag = 0  
+		 LEFT JOIN (SELECT user_id,answer_id FROM user_praise_answer WHERE user_id = #userId# ) upa 
+					ON a.answer_id = upa.answer_id 
+		LEFT JOIN 
+ 		(SELECT user_id,question_id FROM user_follow_question WHERE user_id = #userId# AND status = 0) uf 
+ 		 ON q.question_id = uf.question_id 
+ 		 WHERE q.delete_flag = 0  
+ 		 
+ 		 
+ 		 <isNotEmpty prepend="AND" property="followUserId">
+			q.question_id in (SELECT question_id FROM user_follow_question WHERE user_id = #followUserId# AND status = 0)
+		</isNotEmpty>
+ 		 
+ 		 <isNotEmpty prepend="AND" property="questionId">
+			q.question_id = #questionId#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="followFlag">
+			uf.user_id IS NOT NULL
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="AND" property="keyword">
+			q.question_title like '%$keyword$%'
+		</isNotEmpty>
+		 
+		 <isNotEmpty prepend="AND" property="publishedUid">
+			q.published_uid = #publishedUid#
+		 </isNotEmpty>
+ 		 <isNotEmpty prepend="AND" property="status">
+			q.status = #status#
+		 </isNotEmpty>
+		 and q.verify_status = 1 ORDER BY 
+		  <isEqual property="orderBy" compareValue="answerCount">
+					q.answer_count DESC,
+			</isEqual>
+			
+			<isEqual property="orderBy" compareValue="time">
+					q.add_time DESC,
+			</isEqual>
+ 		   a.agree_count DESC 
+ 		   
+ 		   ) alll 
+	</select>
+ 
+     <select id="queryQuestion" resultMap="questionResult" parameterClass="java.util.Map">
+     	SELECT * FROM 
+		(SELECT q.*,u.user_name,u.one_word,u.avatar_file,IF(uf.user_id IS NULL ,0,1)followFlag ,
+		au.user_name auser_name,au.one_word aone_word,au.avatar_file aavatar_file,au.certify_status acertifyStatus,a.anonymous aanonymous,a.answer_content,
+		a.answer_id,a.agree_count,IF(upa.user_id IS NULL ,0,1) praiseFlag ,IF(ufa.user_id IS NULL ,0,1) afollowFlag,
+		a.comment_count acommentCount,a.view_count aviewCount,qt.topic_id ,tp.topic_title,tp.topic_pic
+					FROM question q 
+		LEFT JOIN users u on q.published_uid = u.user_id			
+		LEFT JOIN answer a on q.question_id = a.question_id AND a.status = 1 AND a.delete_flag = 0
+		LEFT JOIN users au on a.uid = au.user_id  
+		LEFT JOIN (SELECT user_id,answer_id FROM user_praise_answer WHERE user_id = #userId# ) upa 
+					ON a.answer_id = upa.answer_id 
+		LEFT JOIN (SELECT user_id,answer_id FROM user_follow_answer WHERE user_id = #userId# AND status = 0) ufa 
+			ON a.answer_id = ufa.answer_id
+		LEFT JOIN 
+ 		(SELECT user_id,question_id FROM user_follow_question WHERE user_id = #userId# AND status = 0) uf 
+ 		 ON q.question_id = uf.question_id 
+ 		 LEFT JOIN question_topic qt ON q.question_id = qt.question_id LEFT JOIN topic tp ON qt.topic_id = tp.topic_id
+ 		 WHERE q.delete_flag = 0  
+ 		 
+ 		 
+ 		 <isNotEmpty prepend="AND" property="followUserId">
+			q.question_id in (SELECT question_id FROM user_follow_question WHERE user_id = #followUserId# AND status = 0)
+		</isNotEmpty>
+ 		 
+ 		 <isNotEmpty prepend="AND" property="topicId">
+			q.question_id in (SELECT question_id FROM question_topic WHERE topic_id = #topicId#)
+		</isNotEmpty>
+ 		 
+ 		 <isNotEmpty prepend="AND" property="topicIds">
+			q.question_id in (SELECT question_id FROM question_topic WHERE topic_id IN($topicIds$))
+		</isNotEmpty>
+ 		 
+ 		 <isNotEmpty prepend="AND" property="questionId">
+			q.question_id = #questionId#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="followFlag">
+			uf.user_id IS NOT NULL
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="AND" property="keyword">
+			q.question_title like '%$keyword$%'
+		</isNotEmpty>
+		 
+		 <isNotEmpty prepend="AND" property="publishedUid">
+			q.published_uid = #publishedUid#
+		 </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="status">
+			q.status = #status#
+		 </isNotEmpty>
+ 		   ) alll GROUP BY question_id
+ 		   ORDER BY 
+		  <isEqual property="orderBy" compareValue="answerCount">
+					answer_count DESC,add_time DESC,
+			</isEqual>
+			<isEqual property="orderBy" compareValue="time">
+					add_time DESC,
+			</isEqual>
+ 		   agree_count DESC 
+	</select>
+    
+    <update id="updateQuestionFollowCount" parameterClass="java.util.Map">
+    	UPDATE question SET follow_count = (SELECT count(*) FROM user_follow_question 
+			WHERE question_id = #questionId# AND status = 0) WHERE question_id = #questionId#
+    </update>
+    
+    <update id="updateQuestionCommentCount" parameterClass="java.util.Map">
+    	 UPDATE question SET comment_count = (SELECT count(*) FROM question_comments 
+			WHERE question_id = #questionId# and delete_flag = 0 and verify_status = 1) 
+		WHERE question_id = #questionId#
+    </update>
+    
+    <update id="addViewCount" parameterClass="java.util.Map">
+    	UPDATE question SET view_count = view_count+1 WHERE question_id = #questionId#
+    </update>
+ 
+    <select id="queryQuestionTopic" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+    	SELECT b.* FROM question_topic a LEFT JOIN topic b ON a.topic_id=b.topic_id WHERE a.question_id = #questionId#
+    </select>
+    
+    <insert id="saveQuestion" parameterClass="com.ynkj.legal.model.question.Question">
+    	INSERT INTO question(question_id,question_title,question_content,add_time,published_uid,unverified_modify,verify_status,lock_flag,anonymous,status)
+    	values(#questionId#,#questionTitle#,#questionContent#,#addTime#,#publishedUid#,#unverifiedModify#,#verifyStatus#,#lockFlag#,#anonymous#,#status#)
+    </insert>
+    
+    <insert id="saveQuestionTopic" parameterClass="java.util.Map">
+    	INSERT INTO question_topic(topic_id,question_id) VALUES(#topicId#,#questionId#)
+    </insert>
+</sqlMap>

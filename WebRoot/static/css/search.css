@@ -1,0 +1,135 @@
+.search_title{
+	 border-bottom: 1px solid RGB(206,206,206);width: 100%;
+	 margin-top: 30px;font-size: 15px;height: 30px;
+}
+.search_title a{
+	height:100%;padding-bottom: 6px;cursor: pointer;color: #838383;
+}
+.search_title a:hover{
+	border-bottom: 3px solid #f4bb8e ;height:100%;padding-bottom: 6px;cursor: pointer;
+}
+.search_title_a_checked{
+	border-bottom: 3px solid #f4bb8e ;height:100%;padding-bottom: 6px;cursor: pointer;
+}
+
+.search_info{
+	font-size: 14px;
+}
+.search_dot{
+		padding: 0 20px;
+}
+
+.search_question{
+ margin-top: 20px
+}
+
+.search_question_zan{
+	background-color: #f4bb8e;color: white;cursor: pointer;border-radius:8px;font-size: 16px;width: 53px;	
+	margin-right: auto;margin-left: auto;
+}
+.search_question_nozan{
+	background-color:#CDCDB4;color: white;cursor: pointer;border-radius:8px;font-size: 16px;width: 53px;	
+	margin-right: auto;margin-left: auto;
+}
+
+.search_question_title{
+ font-size: 16px;color: black;
+}
+.search_question_title a{
+	color: black;
+}
+.search_question_title a:hover{
+	color: red;
+}
+ 
+.search_question_ul li{
+	margin-top: 30px;padding-bottom: 10px;
+}
+.search_question_info{
+	margin-top: 10px
+}
+.search_question_left{
+	display: inline-block;vertical-align: top;width:60px;text-align: center;
+}
+.search_question_right{
+	display: inline-block;width:560px;margin-left:15px;text-align: left;
+}
+.search_question_time{
+	float: right;font-size: 14px;
+}
+.search_question_name{
+	font-size: 14px
+}
+.search_question_content{
+	font-size: 14px;margin-top: 5px
+}
+.search_question_showall{
+	float: right;color: red;cursor: pointer;
+}
+
+
+.search_user{
+ 	margin-top: 20px
+}
+
+ 
+.search_user_ul li{
+	margin-top: 30px;padding-bottom: 10px;
+}
+.search_user_info{
+	margin-top: 10px
+}
+.search_user_left{
+	display: inline-block;vertical-align: top;width:60px;text-align: center;
+}
+.search_user_right{
+	display: inline-block;width:560px;margin-left:15px;text-align: left;
+}
+.search_user_name{
+	font-size: 15px;color: black;
+}
+.search_user_content{
+	font-size: 14px;margin-top: 10px
+}
+.search_user_ungz{
+	float: right;color: white;background-color:#87dd82 ;cursor: pointer;
+	padding-left: 20px;padding-right: 20px;padding-top: 2px;padding-bottom: 2px
+}
+.search_user_gz{
+	float: right;color: white;background-color:#CDCDB4;cursor: pointer;
+	padding-left: 20px;padding-right: 20px;padding-top: 2px;padding-bottom: 2px
+}
+.search_user_head{
+	width: 55px;height: 60px
+}
+.search_user_data{
+	float: right;padding-left: 20px;font-size: 14px;
+}
+
+
+
+.search_case{
+ 	margin-top: 20px
+}
+.search_case_ul li{
+	margin-top: 30px;padding-bottom: 10px;
+}
+.search_case_info{
+	margin-top: 10px
+}
+.search_case_left{
+	display: inline-block;vertical-align: top;width:60px;text-align: center;
+}
+.search_case_right{
+	display: inline-block;width:560px;margin-left:15px;text-align: left;
+}
+.search_case_name{
+	font-size: 16px;color: black;cursor: pointer;
+}
+.search_case_content{
+	font-size: 14px;margin-top: 10px
+}
+.search_case_data{
+	margin-top: 5px;font-size: 14px;
+} 
+ 

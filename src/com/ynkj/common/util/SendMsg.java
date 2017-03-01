@@ -1,0 +1,35 @@
+package com.ynkj.common.util;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.Header;
+
+public class SendMsg {
+	
+	 public static void main(String[] args)throws Exception
+	 {
+
+		 HttpClient client = new HttpClient();
+		 PostMethod post = new PostMethod("http://api.sms.cn/mtutf8/"); 
+		 post.addRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");//在头文件中设置转码
+		 NameValuePair[] data ={ new NameValuePair("uid", "qifatoo"),
+				 new NameValuePair("pwd", MethodUtil.MD5("zpt1204qifatoo")),
+				 new NameValuePair("mobile","15527980038"),new NameValuePair("content","【启法通】8888")};
+		 post.setRequestBody(data);
+
+		 client.executeMethod(post);
+		 Header[] headers = post.getResponseHeaders();
+		 int statusCode = post.getStatusCode();
+		 System.out.println("statusCode:"+statusCode);
+		 for(Header h : headers)
+		 {
+			 System.out.println(h.toString());
+		 }
+		 String result = new String(post.getResponseBodyAsString().getBytes("utf-8")); 
+		 System.out.println(result); //打印返回消息状态
+		 post.releaseConnection();
+
+	 }
+
+}

@@ -1,0 +1,104 @@
+.fwzs_top{
+	width: 1000px;margin: auto;height: 110px;
+}
+.fwzs_top_left{
+	width: 640px;height: 100%;float: left;
+}
+.fwzs_top_left .logo{
+	width: 227px;
+}
+.fwzs_top_right{
+	width: 300px;height: 100%;float: left;margin-left: 60px;
+}
+.fwzs_top_right_login{
+	margin-top: 50px;text-align: center;
+}
+.fwzs_top_right_loginInfo{
+	margin-top: 40px;text-align: right;padding-right: 20px
+}
+.fwzs_top_right_loginInfo span{
+	padding: 0 20px;color: black;font-size: 14px;position: relative;
+}
+.fwzs_top_left .am-u-lg-7{
+	float: right;margin-top: 50px;
+}
+.fwzs_top_left .am-u-lg-7 .am-form-field{
+	border: 2px solid #dd514c;font-size: 14px !important;
+}
+.fwzs_top_left .fwzs_span{
+	padding: 0 15px;cursor: pointer;font-size: 15px !important;
+}
+.fwzs_top_left .fwzs_line{
+	padding: 0;
+}
+.fwzs_top_right .fwzs_span{
+	padding: 10px 30px;font-size: 14px;
+}
+.fwzs_top_right .fwzs_headImg{
+	width: 50px;height: 50px;
+}
+.fwzs_daohang_full{
+	background-color: rgb(148,19,23);height: 40px;
+}
+.fwzs_daohang{
+	width: 1000px;margin: auto;height: 100%;
+}
+.fwzs_daohang ul{
+	padding: 0;margin: 0;width: 600px;
+}
+.fwzs_daohang li {
+	list-style: none;line-height: 40px;text-align: center;margin: 0 5px
+}
+.fwzs_daohang li a{
+	color: white !important;height: 100%;width: 100%;display: block;font-size: 16px;
+}
+.fwzs_daohang .fwzs_active{
+	background-color: RGB(228,58,61) !important;
+}
+.fwzs_daohang li:HOVER {
+	background-color: RGB(228,58,61) !important;
+}
+
+.msg_img{
+	position: relative;
+}
+.msgCount{
+	background: #bf1031;
+	box-shadow: 0 1px 2px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.15);
+	color: #fff;
+	font-size: 11px !important;
+	font-weight: 700;
+	-webkit-text-size-adjust: none;
+	padding: 0 5px !important;
+	height: 16px;
+	line-height: 16px;
+	border-radius: 16px;
+	text-indent: 0;
+	text-align: center;
+	text-decoration: none;
+	color:white !important;
+	z-index: 12;
+	top: -5px;
+	position: absolute;
+	display: none;
+}
+
+ 
+.simpleSearch li{
+}
+.search_head{
+	width: 40px;height:40px;margin-left: 15px;
+}
+.simpleSearch .search_name{
+	font-size: 15px;color: black;
+}
+.simpleSearch .search_info{
+	margin-top: 5px
+}
+.simpleSearch .search_left{
+	display: inline-block;vertical-align: top;width:60px;text-align: center;
+}
+.simpleSearch .search_right{
+	display: inline-block;width:360px;margin-left:15px;text-align: left;
+}
+

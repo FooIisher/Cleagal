@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="users">
+	<resultMap id="usersFullResult" class="com.ynkj.legal.model.users.Users">
+		<result column="user_id" property="userId"  />
+		<result column="user_name" property="userName"/>
+		<result column="mobile" property="mobile"/>
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="avatar_file" property="avatarFile"/>
+		<result column="sex" property="sex"/>
+		<result column="birthday" property="birthday"/>
+		<result column="province" property="province"/>
+		<result column="city" property="city"/>
+		<result column="city_name" property="cityName"/>
+		<result column="one_word" property="oneWord"/>
+		<result column="individual_resume" property="individualResume"/>
+		<result column="company_name" property="companyName"/>
+		<result column="school" property="school"/>
+		<result column="profess" property="profess"/>
+		<result column="job_id" property="jobId"/>
+		<result column="job_name" property="jobName"/>
+		<result column="reg_time" property="regTime"/>
+		<result column="reg_ip" property="regIp"/>
+		<result column="last_login" property="lastLogin"/>
+		<result column="last_ip" property="lastIp"/>
+		<result column="fans_count" property="fansCount"/>
+		<result column="invite_count" property="inviteCount"/>
+		<result column="question_count" property="questionCount"/>
+		<result column="answer_count" property="answerCount"/>
+		<result column="case_count" property="caseCount"/>
+		<result column="invitation_available" property="invitationAvailable"/>
+		<result column="forbidden" property="forbidden"/>
+		<result column="agree_count" property="agreeCount"/>
+		<result column="recommend_flag" property="recommendFlag"/>
+		<result column="professTagName" property="professTagName"/>
+ 		<result column="followFlag" property="followFlag"/>
+ 		<result column="inviteFlag" property="inviteFlag"/>
+ 		
+ 		<result column="lawsuit_count" property="lawsuitCount"/>
+ 		<result column="win_count" property="winCount"/>
+ 		<result column="certify_status" property="certifyStatus"/>
+ 		<result column="certify_name" property="certifyName"/>
+ 		<result column="certify_file" property="certifyFile"/>
+ 		<result column="certify_company" property="certifyCompany"/>
+ 		<result column="certify_verify" property="certifyVerify"/>
+ 		<result column="sms_status" property="smsStatus"/>
+	</resultMap>
+	
+	<resultMap id="usersResult" class="com.ynkj.legal.model.users.Users">
+		<result column="user_id" property="userId"  />
+		<result column="user_name" property="userName"/>
+		<result column="mobile" property="mobile"/>
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="avatar_file" property="avatarFile"/>
+		<result column="sex" property="sex"/>
+		<result column="birthday" property="birthday"/>
+		<result column="province" property="province"/>
+		<result column="city" property="city"/>
+		<result column="one_word" property="oneWord"/>
+		<result column="individual_resume" property="individualResume"/>
+		<result column="company_name" property="companyName"/>
+		<result column="school" property="school"/>
+		<result column="profess" property="profess"/>
+		<result column="job_id" property="jobId"/>
+		<result column="reg_time" property="regTime"/>
+		<result column="reg_ip" property="regIp"/>
+		<result column="last_login" property="lastLogin"/>
+		<result column="last_ip" property="lastIp"/>
+		<result column="fans_count" property="fansCount"/>
+		<result column="invite_count" property="inviteCount"/>
+		<result column="question_count" property="questionCount"/>
+		<result column="answer_count" property="answerCount"/>
+		<result column="case_count" property="caseCount"/>
+		<result column="invitation_available" property="invitationAvailable"/>
+		<result column="forbidden" property="forbidden"/>
+		<result column="agree_count" property="agreeCount"/>
+		<result column="recommend_flag" property="recommendFlag"/>
+		<result column="professTagName" property="professTagName"/>
+ 		<result column="followFlag" property="followFlag"/>
+ 		<result column="lawsuit_count" property="lawsuitCount"/>
+ 		<result column="win_count" property="winCount"/>
+ 		
+ 		<result column="certify_status" property="certifyStatus"/>
+ 		<result column="certify_name" property="certifyName"/>
+ 		<result column="certify_file" property="certifyFile"/>
+ 		<result column="certify_company" property="certifyCompany"/>
+ 		<result column="certify_verify" property="certifyVerify"/>
+ 		<result column="sms_status" property="smsStatus"/>
+ 		
+	</resultMap>
+	
+	
+	<select id="simpleSearch" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+     	 SELECT user_id,avatar_file,user_name,one_word FROM users 
+     	 WHERE delete_flag = 0 
+     	 <isNotEmpty prepend="AND" property="keyword">
+			user_name like '%$keyword$%'
+		</isNotEmpty>
+		
+		 ORDER BY reg_time DESC
+	</select>
+	
+	<sql id="queryWhere">
+    </sql>
+	
+ 	<select id="queryUserList" resultMap="usersFullResult" parameterClass="java.util.Map">
+  
+			SELECT u.*,p.profess_name professTagName,IF(uf.user_id IS NULL ,0,1) followFlag,ct.name city_name,j.job_name,IF(qi.question_invite_id IS NULL ,0,1) inviteFlag FROM users u 
+			LEFT JOIN (SELECT user_id,user_followed_id FROM user_follow WHERE user_id = #userId# AND status = 0) uf
+				ON u.user_id = uf.user_followed_id
+			LEFT JOIN profess_info p ON u.profess_tag = p.profess_id AND p.delete_flag = 0
+			LEFT JOIN user_topic ut ON u.user_id = ut.user_id
+			LEFT JOIN topic t ON ut.topic_id = t.topic_id AND t.delete_flag = 0 
+			LEFT JOIN city_zone ct ON u.city =ct.id
+			LEFT JOIN job j ON u.job_id =j.job_id
+			LEFT JOIN question_invite qi on qi.recipients_uid = u.user_id 
+			<isNotEmpty prepend="and" property="questionId">
+			qi.question_id = #questionId#
+			</isNotEmpty>
+			WHERE u.delete_flag = 0   
+			
+			<isNotEmpty prepend="and" property="recommendFlag">
+			recommend_flag = #recommendFlag#
+			</isNotEmpty>
+			
+			<!-- fish -->
+			
+			<isNotEmpty prepend="and" property="certifyStatus">
+			certify_status = #certifyStatus#
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="and" property="sex">
+			sex = #sex#
+			</isNotEmpty>
+	
+			<!-- fish -->
+			
+			<isNotEmpty prepend="AND" property="followeeUserId"> <!-- 关注了 -->
+				u.user_id in (SELECT user_followed_id FROM user_follow WHERE user_id = #followeeUserId# AND status = 0)
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="followUserId">	<!-- 被关注了 -->
+				u.user_id in (SELECT user_id FROM user_follow WHERE user_followed_id = #followUserId# AND status = 0)
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="findUserId">
+				u.user_id = #findUserId#
+            </isNotEmpty>
+            
+            <isNotEmpty prepend="AND" property="excludeUserId">
+				u.user_id != #userId#
+            </isNotEmpty>
+            
+            <isNotEmpty prepend="AND" property="mobile">
+				u.mobile = #mobile#
+            </isNotEmpty>
+            
+            <isNotEmpty prepend="AND" property="smsStatus">
+				u.sms_status = #smsStatus#
+            </isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="topicId">
+				t.topic_id = #topicId#
+            </isNotEmpty>
+            
+            <isNotEmpty prepend="AND" property="keyword">
+				u.user_name like '%$keyword$%'
+            </isNotEmpty>
+			
+ 			GROUP BY u.user_id ORDER BY 
+ 			<isNotEmpty prepend="" property="userOrderBy">
+				$userOrderBy$
+            </isNotEmpty>
+ 			reg_time DESC
+	</select>
+ 
+ 
+    
+    <select id="queryCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		select count(*) from users where delete_flag = 0
+		<isNotEmpty prepend="and" property="recommendFlag">
+			recommend_flag = #recommendFlag#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userId">
+			user_id != #userId#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="keyword">
+			user_name like '%$keyword$%'
+        </isNotEmpty>
+       
+       <!-- fish -->
+        <isNotEmpty prepend="AND" property="certifyStatus">
+			certify_status = #ertifyStatus#
+        </isNotEmpty>
+        
+        
+	</select>
+    
+    <select id="query" resultMap="usersResult" parameterClass="java.util.Map">
+		select * from users where delete_flag = 0
+		<isNotEmpty prepend="and" property="recommendFlag">
+			recommend_flag = #recommendFlag#
+		</isNotEmpty>
+	</select>
+
+	<select id="getMaxUserId" resultClass="java.lang.Integer">
+	    select MAX(user_id+0) from users
+    </select>
+    
+     <select id="getUsersByParams" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+	    select count(1) from users where $params$ = #value# and delete_flag = 0	
+    </select>
+    
+    	<!-- 自定义查询 -->
+	<sql id="columns">certify_verify,certify_status,certify_name,certify_file,certify_company,user_id ,user_name ,mobile,email,password,avatar_file ,sex,birthday,province,
+       city,one_word ,individual_resume ,company_name ,school,profess,job_id ,
+       reg_time ,reg_ip,lawsuit_count,win_count,
+       last_login ,last_ip ,fans_count ,invite_count ,question_count ,answer_count ,case_count,
+       invitation_available ,forbidden,agree_count ,delete_flag,recommend_flag,sms_status</sql>
+  
+  
+    <select id="getUsersByLogin" parameterClass="java.util.HashMap" resultMap="usersResult">
+        select <include refid="columns"/>,'' professTagName,0 followFlag from users where mobile = #mobile# and password = #password# and forbidden = 0 and delete_flag = 0 
+   
+    </select>
+    
+    <select id="getUsersById" parameterClass="java.lang.String" resultMap="usersResult">
+        select * from users where user_id = #userId# and delete_flag = 0 
+    </select>
+
+	<insert id="insert" parameterClass="com.ynkj.legal.model.users.Users" >
+       insert into users(user_id,user_name,mobile,email,password,avatar_file,sex,birthday,province,
+       city,one_word,individual_resume,company_name,school,profess,job_id,reg_time,reg_ip,
+       last_login,last_ip,fans_count,invite_count,question_count,answer_count,invitation_available,
+       forbidden,agree_count,recommend_flag,delete_flag) values 
+       (#userId#,#userName#,#mobile#,#email#,#password#,#avatarFile#,#sex#,#birthday#,#province#,
+       #city#,#oneWord#,#individualResume#,#companyName#,#school#,#profess#,#jobId#,#regTime#,#regIp#,
+       #lastLogin#,#lastIp#,#fansCount#,#inviteCount#,#questionCount#,#answerCount#,#invitationAvailable#,
+       #forbidden#,#agreeCount#,#recommendFlag#,0);
+    </insert>
+    
+      <update id="updateUserAgreeCount" parameterClass="com.ynkj.legal.model.users.Users">
+      	UPDATE users SET agree_count =  (SELECT count(upa.user_id) FROM user_praise_answer upa
+	    LEFT JOIN answer a ON upa.answer_id = a.answer_id WHERE a.uid = #userId#) WHERE user_id = #userId#  	
+      </update>
+      
+        <update id="updateUserFansCount" parameterClass="com.ynkj.legal.model.users.Users">
+      	UPDATE users SET fans_count =  (SELECT count(uf.user_id) FROM user_follow uf
+	     WHERE uf.user_followed_id = #userId# AND uf.status = 0) WHERE user_id = #userId#  	
+      </update>
+    
+    <update id="update" parameterClass="com.ynkj.legal.model.users.Users">
+    	update users 
+    	<dynamic prepend="set">
+			<isNotEmpty prepend="," property="userName">
+				user_name = #userName#
+            </isNotEmpty>
+			<isNotEmpty prepend="," property="mobile">
+				mobile = #mobile#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="email">
+				email = #email#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="password">
+				password = #password#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="avatarFile">
+				avatar_file = #avatarFile#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="sex">
+				sex = #sex#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="birthday">
+				birthday = #birthday#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="province">
+				province = #province#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="city">
+				city = #city#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="oneWord">
+				one_word = #oneWord#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="individualResume">
+				individual_resume = #individualResume#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="companyName">
+				company_name = #companyName#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="school">
+				school = #school#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="profess">
+				profess = #profess#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="jobId">
+				job_id = #jobId#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="regTime">
+				reg_time = #regTime#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="regIp">
+				reg_ip = #regIp#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="lastLogin">
+				last_login = #lastLogin#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="lastIp">
+				last_ip = #lastIp#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="fansCount">
+				fans_count = #fansCount#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="inviteCount">
+				invite_count = #inviteCount#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="questionCount">
+				question_count = #questionCount#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="answerCount">
+				answer_count = #answerCount#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="invitationAvailable">
+				invitation_available = #invitationAvailable#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="forbidden">
+				forbidden = #forbidden#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="agreeCount">
+				agree_count = #agreeCount#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="recommendFlag">
+				recommend_flag = #recommendFlag#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="certifyStatus">
+				certify_status = #certifyStatus#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="certifyName">
+				certify_name = #certifyName#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="certifyFile">
+				certify_file = #certifyFile#
+            </isNotEmpty>
+            <isNotEmpty prepend="," property="certifyCompany">
+				certify_company = #certifyCompany#
+            </isNotEmpty>
+		</dynamic>
+		where user_id = #userId#
+    </update>
+    
+    <select id="countUserActionHistory" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT count(*) FROM user_action_history WHERE uid = #userId#
+    </select>
+    
+    <select id="queryUserActionHistory" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+    	SELECT a.*,b.question_title,c.answer_content,d.case_title,e.user_name,q.question_title answer_question,q.question_id FROM 
+		(SELECT * FROM user_action_history WHERE uid = #userId# ORDER BY add_time DESC) a
+		LEFT JOIN question b  ON a.associate_id = b.question_id
+		LEFT JOIN answer c ON a.associate_id = c.answer_id
+		LEFT JOIN question q ON c.question_id = q.question_id
+		LEFT JOIN cases d ON a.associate_id = d.case_id
+		LEFT JOIN users e ON a.associate_id = e.user_id
+    </select>
+    
+    <select id="countUserFollow" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM user_follow WHERE 1=1
+    	<isNotEmpty prepend="and" property="userId">
+			user_id = #userId#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="userFollowedId">
+			user_followed_id = #userFollowedId#
+        </isNotEmpty>
+    </select>
+    
+    <insert id="saveOfUser" parameterClass="java.util.HashMap">
+    	INSERT INTO ofUser(username,encryptedPassword,creationDate,modificationDate) VALUES(#username#,#encryptedPassword#,#creationDate#,#modificationDate#)
+    </insert>
+    
+    <update id="updateOfUser" parameterClass="java.util.HashMap">
+    	UPDATE ofUser SET encryptedPassword = #encryptedPassword# WHERE username = #username#
+    </update>
+    
+    <insert id="saveFeedback" parameterClass="java.util.Map">
+    	INSERT INTO feedback(feedback_id,content,user_id,create_time) VALUES(#feedback_id#,#content#,#user_id#,#create_time#)
+    </insert>
+    
+    <select id="queryCityList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+    	SELECT * FROM city_zone WHERE 1=1
+    	<isNotEmpty prepend="and" property="level">
+			level = #level#
+        </isNotEmpty>
+        <isNotEmpty prepend="and" property="parent_id">
+			parent_id = #parent_id#
+        </isNotEmpty>
+    </select>
+    
+    <select id="querySmsPhoneList" parameterClass="java.util.Map" resultClass="java.util.HashMap">
+    	SELECT * FROM sms_phone WHERE status = 0
+    </select>
+    
+</sqlMap>

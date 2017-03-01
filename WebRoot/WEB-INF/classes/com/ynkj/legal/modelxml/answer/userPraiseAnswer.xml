@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="userPraiseAnswer">
+    <resultMap id="abatorgenerated_UserFollowAnswerResult" class="com.ynkj.legal.model.answer.UserPraiseAnswer">
+		<result column="user_id" property="userId"   />
+		<result column="answer_id" property="answerId"
+			  />
+		<result column="add_time" property="addTime"   />
+	</resultMap>
+    <insert id="insert"  parameterClass="com.ynkj.legal.model.answer.UserPraiseAnswer">
+	   insert into
+		user_praise_answer (user_id, answer_id ,add_time)
+		values (#userId#,#answerId#,#addTime#)
+    </insert>
+    
+      <delete id="delete" parameterClass="com.ynkj.legal.model.answer.UserPraiseAnswer">
+		delete from user_praise_answer where user_ID = #userId# and answer_id = #answerId#
+	</delete>
+    
+ 
+    
+</sqlMap>
